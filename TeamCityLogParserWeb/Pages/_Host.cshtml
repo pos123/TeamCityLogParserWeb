@@ -1,0 +1,33 @@
+﻿@page "/"
+@namespace TeamCityLogParserWeb.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team City Log Parser</title>
+    <base href="~/" />
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/animate.min.css" rel="stylesheet" />
+    <link href="/css/site.css" rel="stylesheet" />
+
+</head>
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="_content/BlazorInputFile/inputfile.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+    <script src="/js/file_download.js"></script>
+    <script src="/js/site_interop.js"></script>
+</body>
+</html>

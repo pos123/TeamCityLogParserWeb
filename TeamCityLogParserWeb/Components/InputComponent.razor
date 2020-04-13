@@ -1,0 +1,67 @@
+﻿@inherits InputComponentBase
+
+
+<div class="card shadow-lg mx-auto" style="width: 95%; min-width: 900px">
+    <div class="card-body">
+        <h2 class="card-title tc-card-title"><i class="fas fa-download"></i>&nbsp;&nbsp;Build log file input</h2>
+
+        <!-- Upload file component -->
+        <div class="mx-auto drag-drop-zone" style="@(!IsProcessing ? "display:block" : "display:none")">
+            <InputFile OnChange="UploadFile" />
+            <span><i style="color: silver" class="fab fa-dropbox"></i>&nbsp;&nbsp;DROP A TEAM CITY BUILD LOG HERE&nbsp;&nbsp;or&nbsp;&nbsp;CLICK TO EXPLORE AND CHOOSE</span>
+
+            @if (!string.IsNullOrWhiteSpace(ApplicationState.Filename))
+            {
+                <div>
+                    <span class="input-currently-selected-file-label">&gt;&nbsp;</span>
+                    <span class="input-currently-selected-file"><i class="far fa-file"></i>&nbsp;@ApplicationState.Filename</span>
+                    <span class="input-currently-selected-file-label">&nbsp;&lt;</span>
+                </div>
+            }
+        </div>
+
+        @switch (ApplicationState.ProcessingState)
+        {
+            case ProcessingStatus.FileUploading:
+                <div class="input-status animated fadeIn slower">
+                    <span class="input-status-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                </div>
+                break;
+            case ProcessingStatus.FileUploaded:
+                <div class="input-status animated fadeIn slower">
+                    <span class="input-status-success"><i class="far fa-check-circle"></i></span>
+                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                </div>
+                break;
+            case ProcessingStatus.FileUploadError:
+                <div class="input-status animated fadeIn slower">
+                    <span class="input-status-failure animated fadeIn slower"><i class="fas fa-exclamation-circle"></i></span>
+                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                </div>
+                break;
+            case ProcessingStatus.Parsing:
+                <div class="input-status animated fadeIn slower">
+                    <span class="input-status-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
+                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                </div>
+                break;
+            case ProcessingStatus.ParsingFinished:
+                <div class="input-status animated fadeIn slower">
+                    <span class="input-status-success"><i class="far fa-check-circle"></i></span>
+                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay&nbsp;</span>
+                    <span class="input-currently-selected-file-label animated fadeIn"><i class="fas fa-arrow-circle-down"></i></span>
+                </div>
+                break;
+            case ProcessingStatus.ParsingFailure:
+                <div class="input-status animated fadeIn slower">
+                    <span class="input-status-failure animated fadeIn slower"><i class="fas fa-exclamation-circle"></i></span>
+                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                </div>
+                break;
+            default:
+                break;
+        }
+
+    </div>
+</div>

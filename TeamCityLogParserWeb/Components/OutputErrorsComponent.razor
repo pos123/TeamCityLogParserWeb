@@ -1,0 +1,18 @@
+﻿@using System.ComponentModel.DataAnnotations.Schema
+@inherits OutputErrorsComponentBase
+
+@if (!Parser.GetFailedProjectList().Any())
+{
+    <div class="summary-output-outer">
+        <span class="output-status-icon-information"><i class="fas fa-info-circle"></i></span><span class="summary-output-text">&nbsp;Build errors view n/a</span>
+    </div>
+}
+
+<div>
+    @foreach (var failedProject in Parser.GetFailedProjectList())
+    {
+        <ProjectErrorDisplayComponent FailedProjectId="@failedProject"></ProjectErrorDisplayComponent>
+    }
+</div>
+
+

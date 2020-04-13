@@ -1,0 +1,45 @@
+﻿@page "/project/{ProjectId:int}/{LineNumber:int}"
+@using TeamCityLogParserWeb.Services
+@inherits ProjectLogComponentBase
+
+
+<div class="project-log-main">
+    <div>
+        <span class="project-errors-back" @onclick="NavigateBack"><i class="fas fa-arrow-circle-left"></i></span>
+        <span class="project-errors-project-label">&nbsp;Build log for&nbsp;</span>
+        <span class="project-errors-project-name">@ProjectName</span>
+        <span class="project-errors-configuration">@Configuration&nbsp;</span>
+        <span class="badge badge-danger project-errors-badge-size">@ErrorCount</span>
+
+        <div class="project-log-detail">
+            @foreach (var entry in Parser.GetProjectData((uint)@ProjectId))
+            {
+                var (isError, previous, next, errorNumber) = ErrorMap.IsErrorLine(entry.Item1);
+                if (isError)
+                {
+                    <section id="@($"error_link_{entry.Item1}")" class="project-log-error-line">
+                        @entry.Item2
+
+                        @if (previous != 0)
+                        {
+                            <button class="btn btn-link project-log-detail-navigation" @onclick="(() => previous_action(previous))"><i class="fas fa-caret-left"></i>&nbsp;previous</button>
+                        }
+
+                        <span class="badge badge-info project-error-badge-size">@errorNumber</span>
+
+                        @if (next != 0)
+                        {
+                            <button class="btn btn-link project-log-detail-navigation" @onclick="(() => next_action(next))">next&nbsp;<i class="fas fa-caret-right"></i></button>
+                        }
+                    </section>
+                }
+                else
+                {
+                    @entry.Item2<br>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+

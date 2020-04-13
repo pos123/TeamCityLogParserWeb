@@ -1,0 +1,378 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+:root {
+    --drop-zone-display-size: 1.2rem;
+    --header-font-size: 2.0rem;
+    --base-header-size: 1.20rem;
+    --input-file-selected-size: 1.0rem;
+    --base-display-size: 1.10rem;
+    --project-display-font-size: 0.85rem;
+    --project-text-font-size: 0.85rem;
+    --team-city-light-blue: rgb(23, 142, 214);
+    --team-city-light-purple: rgba(113, 88, 221, 1);
+    --failure-colour: rgba(252, 16, 13, 1);
+    --success-colour: rgb(75, 181, 67);
+    --body-background-colour: whitesmoke;
+    --status-colour: darkgray;
+    --charcoal: #333333;
+    --summary-output-font-size: 1.1rem;
+    --error-badge-size: 0.80rem;
+    --project-errors-size: 1.5rem;
+    --download-text-size: 1.20rem;
+}
+
+body {
+    background-color: var(--body-background-colour);
+    background-image: url("../img/teamcity.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.header-brand-text {
+    font-family: 'Bebas Neue';
+    font-size: var(--header-font-size);
+    font-weight: 400;
+    text-transform: uppercase;
+    color: whitesmoke;
+    padding-left: 5px;
+    padding-top: 3px;
+}
+
+.header-background {
+    background-image: url("../img/teamcity.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.tc-card-title {
+    font-family: 'Roboto Condensed';
+    font-weight: 600;
+    font-size: var(--base-header-size);
+    background: var(--team-city-light-purple);
+    color: whitesmoke;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    text-transform: uppercase;
+}
+
+.drag-drop-zone {
+    font-family: 'Roboto Condensed';
+    font-weight: 900;
+    font-size: var(--drop-zone-display-size);
+    border: 2px dashed darkgrey;
+    padding: var(--base-header-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: whitesmoke;
+    color: var(--team-city-light-blue);
+    cursor: pointer;
+    margin: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+    .drag-drop-zone:hover {
+        text-shadow: 0 0 1px var(--team-city-light-blue);
+        background-color: lemonchiffon;
+    }
+
+    .drag-drop-zone input[type=file] {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+.input-status {
+    width: 95%;
+}
+
+.input-status-spinner {
+    font-size: var(--base-display-size);
+    color: var(--team-city-light-purple);
+}
+
+.input-status-failure {
+    color: var(--failure-colour);
+    font-size: var(--base-display-size);
+    font-weight: 500;
+}
+
+.input-status-success {
+    font-weight: 500;
+    font-size: var(--base-display-size);
+    color: var(--success-colour);
+}
+
+.input-status-display {
+    font-family: 'Roboto Condensed';
+    font-weight: 600;
+    font-size: var(--base-display-size);
+    color: var(--status-colour);
+    text-transform: uppercase;
+}
+
+.input-status-display-filename {
+    font-family: 'Roboto Condensed';
+    font-weight: 600;
+    font-size: var(--base-display-size);
+    color: var(--team-city-light-blue);
+    text-transform: uppercase;
+    text-shadow: 0 0 1px var(--team-city-light-blue);
+}
+
+
+.input-currently-selected-file-label {
+    font-family: 'Roboto Condensed';
+    font-weight: 600;
+    font-size: var(--input-file-selected-size);
+    color: var(--team-city-light-blue);
+    text-transform: uppercase;
+    text-shadow: 0 0 1px var(--team-city-light-blue);
+}
+
+.input-currently-selected-file {
+    font-family: 'Roboto Condensed';
+    font-weight: 600;
+    font-size: var(--input-file-selected-size);
+    color: darkgray;
+    text-transform: uppercase;
+    text-shadow: 0 0 1px var(--team-city-light-blue);
+}
+
+
+.nav-tabs {
+    border-bottom: 1px solid transparent;
+}
+
+.nav-tabs .nav-link, .nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
+        border: 0;
+        border-bottom: 1px solid grey;
+        color: gray;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #000000;
+        border-radius: 0;
+        border-bottom: 2px solid var(--team-city-light-purple);
+    }
+
+
+.tabs-main-font {
+    font-family: 'open sans';
+    font-size: 0.9rem;
+}
+
+.tabs-report-text-colour {
+    color: var(--charcoal);
+}
+
+.summary-output-outer {
+    margin-top: 0.5em;
+    padding: 1em;
+    background-color: whitesmoke;
+    border: 1px lightgray solid;
+    box-shadow: 0px 0px 12px 0px rgba(169,169,169,1);
+    align-content: center;
+}
+
+.summary-output-text {
+    font-family: consolas, monospace;
+    font-weight: 600;
+    font-size: var(--summary-output-font-size);
+    vertical-align: middle;
+}
+
+.output-status-icon-failure {
+    font-size: var(--summary-output-font-size);
+    color: var(--failure-colour);
+    vertical-align: middle;
+}
+
+.output-status-icon-information {
+    font-size: var(--summary-output-font-size);
+    color: var(--team-city-light-blue);
+    vertical-align: middle;
+}
+
+.output-status-icon-success {
+    font-size: var(--summary-output-font-size);
+    color: var(--success-colour);
+    vertical-align: middle;
+}
+
+.output-status-time-taken-clock {
+    padding-left: 1em;
+    font-size: var(--summary-output-font-size);
+    vertical-align: middle;
+    color: darkgray;
+}
+
+.output-status-time-taken {
+    font-family: consolas, monospace;
+    font-weight: 600;
+    font-size: var(--summary-output-font-size);
+    vertical-align: middle;
+    color: darkgray;
+}
+
+.error-text {
+    text-align: left;
+    word-wrap: break-word;
+    font-family: consolas, monospace;
+    font-weight: normal;
+    color: darkslategrey;
+}
+
+.link-line-number {
+    text-decoration: underline;
+    font-size: 1rem;
+ }
+
+.errors-container {
+    padding-left: 0.8rem;
+    padding-top: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    flex-wrap: nowrap;
+}
+
+.errors-container .project-header {
+    padding-bottom: 0.75rem;
+    padding-right: 2rem;
+    min-width: 200px;
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--project-display-font-size);
+    color: black;
+}
+
+.errors-container .project-header .platform-configuration {
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--project-display-font-size);
+    color: darkgrey;
+}
+
+
+.errors-container .errors-list {
+    padding-left: 2rem;
+    min-width: 600px;
+    font-family: consolas, monospace;
+    font-weight: normal;
+    font-size: var(--project-text-font-size);
+    color: slategrey;
+}
+
+.project-log-main {
+    padding: 1rem;
+    width: 95%;
+    margin: 0 auto 2rem auto;
+    background-color: whitesmoke;
+    box-shadow: 0px 0px 3px 3px whitesmoke;
+}
+
+.project-log-project-name {
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--project-display-font-size);
+    color: black;
+}
+
+.project-log-project-label {
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--project-display-font-size);
+    color: var(--team-city-light-blue);
+    text-transform: uppercase;
+}
+
+.project-log-project-configuration {
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--project-display-font-size);
+    color: darkgray;
+}
+
+.project-log-detail {
+    padding: 1rem;
+    font-family: consolas, monospace;
+    font-weight: normal;
+    font-size: var(--project-text-font-size);
+    color: black;
+}
+
+.project-log-error-line {
+    color: slategrey;
+}
+
+.project-log-detail-navigation {
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--project-display-font-size);
+    color: var(--team-city-light-blue);
+    padding: 0;
+    border: 0;
+}
+
+.project-error-badge-size {
+    font-size: var(--error-badge-size);
+}
+
+.download-text {
+    font-family: 'open sans';
+    font-weight: bold;
+    font-size: var(--download-text-size);
+}
+
+.section-highlight {
+    background-color: lemonchiffon;
+}
+
+
+.project-errors-back {
+    font-size: var(--project-errors-size);
+    color: var(--team-city-light-blue);
+}
+
+.project-errors-project-label {
+    font-size: var(--project-errors-size);
+    font-family: 'open sans';
+    font-weight: bold;
+    color: var(--team-city-light-blue);
+    text-transform: uppercase;
+}
+
+.project-errors-project-name {
+    font-size: var(--project-errors-size);
+    font-family: 'open sans';
+    font-weight: bold;
+    color: black;
+}
+
+.project-errors-configuration {
+    font-size: var(--project-errors-size);
+    font-family: 'open sans';
+    font-weight: bold;
+    color: darkgray;
+}
+
+.project-errors-badge-size {
+    font-size: var(--project-errors-size);
+}
+

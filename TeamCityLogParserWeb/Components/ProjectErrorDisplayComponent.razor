@@ -1,0 +1,27 @@
+﻿@inherits ProjectErrorDisplayComponentBase
+
+<div class="errors-container">
+    <div class="project-header">
+        <span>@ProjectName</span>
+        <span class="platform-configuration">@Configuration&nbsp;</span>
+    </div>
+    <div class="errors-list">
+        <ul class="list-group list-group-flush">
+            @code
+            {
+                int i = 0;
+            }
+
+            @foreach (var data in FailedData)
+            {
+                <li class="list-group-item">
+                    <div style="vertical-align: middle;">
+                        <span class="link-line-number"><NavLink href="@($"project/{FailedProjectId}/{(int)data.Item1}")"><span class="badge badge-info project-error-badge-size">@(++i)</span></NavLink></span>
+                        <span>@data.Item5</span>
+                        <span class="link-line-number"><NavLink href="@($"project/{FailedProjectId}/{(int)data.Item1}")"><i class="fas fa-expand-alt"></i></NavLink></span>
+                    </div>
+            </li>
+            }
+        </ul>
+    </div>
+</div>

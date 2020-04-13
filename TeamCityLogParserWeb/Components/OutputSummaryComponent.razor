@@ -1,0 +1,18 @@
+﻿@inherits OutputSummaryComponentBase
+
+<div class="summary-output-outer">
+    @if (!BuildCompleted || !BuildSucceeded)
+    {
+        <span class="output-status-icon-failure"><i class="fas fa-exclamation-circle"></i></span><span class="summary-output-text">&nbsp;@SummaryMessage</span>
+    }
+    else
+    {
+        <span class="output-status-icon-success"><i class="fas fa-check-circle"></i></span><span class="summary-output-text">&nbsp;@SummaryMessage</span>
+    }
+
+    @if (!String.IsNullOrWhiteSpace(BuildTime))
+    {
+        <span class="output-status-time-taken-clock"><i class="fas fa-clock"></i></span><span class="output-status-time-taken">&nbsp;@BuildTime</span>
+    }
+</div>
+
