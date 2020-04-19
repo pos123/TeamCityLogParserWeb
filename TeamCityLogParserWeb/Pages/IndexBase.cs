@@ -11,7 +11,7 @@ using TeamCityLogParserWeb.Services;
 
 namespace TeamCityLogParserWeb.Pages
 {
-    public class IndexBase : ComponentBase
+    public class IndexBase : ComponentBase, IDisposable
     {
         [Inject] protected IApplicationState ApplicationState { get; set; }
 

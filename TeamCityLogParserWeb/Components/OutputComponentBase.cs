@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
@@ -7,7 +8,7 @@ using static System.String;
 
 namespace TeamCityLogParserWeb.Components
 {
-    public class OutputComponentBase : ComponentBase
+    public class OutputComponentBase : ComponentBase, IDisposable
     {
         [Inject] protected IApplicationState AppState { get; set; }
 
