@@ -11,7 +11,12 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorInputFile" Version="0.1.0-preview-00002" />
-    <PackageReference Include="TeamCityLogParser" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="TeamCityLogParser">
+      <HintPath>..\..\TeamcityLogParser\TeamCityLogParser\bin\Debug\netstandard2.0\TeamCityLogParser.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

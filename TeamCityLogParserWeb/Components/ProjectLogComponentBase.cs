@@ -34,7 +34,7 @@ namespace TeamCityLogParserWeb.Components
 
         protected override Task OnInitializedAsync()
         {
-            var errors = Parser?.GetBuildErrorsOutputForProject((uint)ProjectId);
+            var errors = Parser?.GetCodeBuildErrorsOutputForProject((uint)ProjectId);
             ErrorLineNumbers = errors?.Select(x => x.Item1).OrderBy(x => x).ToList();
             ErrorCount = errors?.Count() ?? 0;
             ProjectName = errors?.FirstOrDefault()?.Item2;

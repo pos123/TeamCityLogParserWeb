@@ -1,30 +1,29 @@
 ﻿@inherits DownloadComponentBase
 
-@if (!Parser.IsSolutionBuildCompleted())
+@if (Parser.IsCodeBuildFailure())
 {
     <div class="summary-output-outer">
-        <span class="output-status-icon-information"><i class="fas fa-info-circle"></i></span><span class="summary-output-text">&nbsp;Downloads view n/a for build solutions that not completed</span>
-    </div>
+
+        <div class="input-status animated fadeIn slower" style="@(Downloading ? "display:block" : "display:none")">
+            <span class="input-status-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
+            <span class="input-status-display">Downloading ...</span>
+        </div>
+
+        @if (!Downloading)
+        {
+            <button class="btn btn-link download-text" @onclick="(() => Download())">
+                <span class="text-info"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;</span>
+                Click here to download the build log entries grouped by project
+            </button>
+        }
+
+    </div>        
 }
 else
 {
-<div class="summary-output-outer">
-
-    <div class="input-status animated fadeIn slower" style="@(Downloading ? "display:block" : "display:none")">
-        <span class="input-status-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
-        <span class="input-status-display">Downloading ...</span>
+    <div class="summary-output-outer">
+        <span class="output-status-icon-information"><i class="fas fa-info-circle"></i></span><span class="summary-output-text">&nbsp;Downloads view n/a</span>
     </div>
-
-    @if (!Downloading)
-    {
-        <button class="btn btn-link download-text" @onclick="(() => Download())">
-            <span class="text-info"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;</span>
-            Click here to download the build log entries grouped by project
-        </button>
-    }
-
-</div>    
-
 }
 
 

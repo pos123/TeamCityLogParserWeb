@@ -6,134 +6,119 @@ using System.Text;
 using System.Threading.Tasks;
 using TeamCityLogParser;
 using TeamCityLogParser.Extractors;
+using TeamCityLogParser.Parsers;
 using TeamCityLogParserWeb.Pages;
 
 namespace TeamCityLogParserWeb.Services
 {
     public class ParserService : IParserService
     {
-        private ParserProcessor parserProcessor;
-        private DataService dataService;
+        private BuildLogParser buildLogParser;
         
         public async Task Run(string payload, Action<string> progress)
         {
             var sync = new object();
-
-            var valueExtractor = new ValueExtractor(new DataDictionary());
-            dataService = new DataService(payload);
-            var parser = new Parser(dataService, valueExtractor);
-
-            parserProcessor = new ParserProcessor(parser);
-            await parserProcessor.Run((statusUpdate) =>
+            buildLogParser = new BuildLogParser(payload);
+            await buildLogParser.Parse((update) =>
             {
                 lock (sync)
                 {
-                    progress?.Invoke(statusUpdate);
+                    progress?.Invoke(update);
                 }
             });
         }
 
-        public Tuple<bool, string> GetFinalBuildStatement()
+        public bool IsFailedBuild()
         {
-            if (!IsSolutionBuildCompleted())
-            {
-                return Tuple.Create(false, "Unable to identify errors as build log is not complete - requires a solution start and solution end");
-            }
+            return buildLogParser != null && buildLogParser.HasFailedStages();
+        }
 
-            var solutionBuild = parserProcessor.SolutionBuildSucceeded;
-            if (solutionBuild != null)
-            {
-                return Tuple.Create(true, $"Build: {solutionBuild.Succeeded} succeeded, {solutionBuild.Failed} failed, {solutionBuild.Succeeded} up-to-date, {solutionBuild.Failed} skipped");
-            }
+        public bool IsCodeBuildCompleted()
+        {
+            return buildLogParser != null && buildLogParser.IsCodeBuildCompleted();
+        }
 
-            var solutionRebuild = parserProcessor.SolutionRebuildSucceeded;
-            if (solutionRebuild != null)
-            {
-                return Tuple.Create(true, $"Rebuild All: {solutionRebuild.Succeeded} succeeded, {solutionRebuild.Failed} failed, {solutionRebuild.Failed} skipped");
-            }
+        public int GetErrorCount()
+        {
+            return buildLogParser?.GetLastStageErrorCount() ?? 0;
+        }
 
-            var failedMessage = $"Solution build failed: {parserProcessor.ProjectBuildFailedEntries.Count} failed project(s), {parserProcessor.ProjectLineErrors.Count} error instance(s)";
-            return Tuple.Create(false, failedMessage);
+        public Tuple<bool, string> GetBuildStatement()
+        {
+            return buildLogParser != null ? buildLogParser.GetStatement() : Tuple.Create(false, string.Empty);
         }
 
         public TimeSpan? GetBuildTimeTaken()
         {
-            if (!IsSolutionBuildCompleted())
-            {
-                return null;
-            }
-
-            if (parserProcessor.SolutionBuildSucceeded != null)
-            {
-                return parserProcessor.SolutionBuildSucceeded.Time - parserProcessor.SolutionStart.Time;
-            }
-
-            if (parserProcessor.SolutionRebuildSucceeded != null)
-            {
-                return parserProcessor.SolutionRebuildSucceeded.Time - parserProcessor.SolutionStart.Time;
-            }
-
-            return parserProcessor.SolutionFailedEntry.Time - parserProcessor.SolutionStart.Time;
+            return buildLogParser?.GetLastStageTimeTaken();
         }
 
-        public bool IsSolutionBuildCompleted() =>
-            parserProcessor?.SolutionStart != null && (parserProcessor.SolutionFailedEntry != null ||
-                                                       parserProcessor.SolutionBuildSucceeded != null ||
-                                                       parserProcessor.SolutionRebuildSucceeded != null);
-
-        public IEnumerable<uint> GetFailedProjectList()
+        public bool IsSvnStageFailure()
         {
-            return parserProcessor.ProjectBuildFailedEntries.Select(x => x.Id);
+            return buildLogParser != null && buildLogParser.GetLastFailedStageGroupType() == StageGroupType.SvnUpdate;
         }
 
-        public List<Tuple<uint, string, string, string, string>> GetBuildErrorsOutputForProject(uint projectId)
+        public bool IsVerifyPackagesStageFailure()
         {
-            if (parserProcessor == null)
+            return buildLogParser != null && buildLogParser.GetLastFailedStageGroupType() == StageGroupType.VerifyPackages;
+        }
+
+        public bool IsCodeBuildFailure()
+        {
+            return buildLogParser != null && buildLogParser.GetLastFailedStageGroupType() == StageGroupType.CodeBuild;
+
+        }
+
+        public IEnumerable<uint> GetCodeBuildFailedProjectList()
+        {
+            var codeResults = buildLogParser?.CodeResults;
+            return codeResults != null ? codeResults.GetFailedProjectList() : Enumerable.Empty<uint>();
+        }
+
+        public IEnumerable<Tuple<uint, string, string, string, string>> GetCodeBuildErrorsOutputForProject(uint projectId)
+        {
+            if (buildLogParser == null)
             {
-                return new List<Tuple<uint, string, string, string, string>>();
+                return Enumerable.Empty<Tuple<uint, string, string, string, string>>();
             }
-            
-            return (from entry in parserProcessor.ProjectLineErrors.Where( x => x.ProjectEntry.ProjectId == projectId)
+
+            var codeBuildResults = buildLogParser.CodeResults;
+
+            return (from entry in codeBuildResults.GetProjectLineErrors().Where( x => x.ProjectEntry.ProjectId == projectId)
                 let lineNumber = entry.ProjectEntry.LineNumber
-                let project = parserProcessor.ProjectDefinitions.FirstOrDefault(x => x.Id == entry.ProjectEntry.ProjectId)?.Name
-                let configuration = parserProcessor.ProjectDefinitions.FirstOrDefault(x => x.Id == entry.ProjectEntry.ProjectId)?.Configuration
+                let project = codeBuildResults.GetProjectDefinitions().FirstOrDefault(x => x.Id == entry.ProjectEntry.ProjectId)?.Name
+                let configuration = codeBuildResults.GetProjectDefinitions().FirstOrDefault(x => x.Id == entry.ProjectEntry.ProjectId)?.Configuration
                 let errorCategory = entry.Error
                 let error = entry.ProjectEntry.Data
                 select Tuple.Create(lineNumber, project, configuration, errorCategory, error)).ToList();
         }
 
-        public List<Tuple<uint,string,string,string,string>> GetBuildErrorsOutput()
-        {
-            if (parserProcessor == null)
-            {
-                return new List<Tuple<uint, string, string, string, string>>();
-            }
-
-            return (from entry in parserProcessor.ProjectLineErrors.OrderBy(x => x.ProjectEntry.ProjectId).ThenBy(x => x.ProjectEntry.LineNumber)
-                let lineNumber = entry.ProjectEntry.LineNumber
-                let project = parserProcessor.ProjectDefinitions.FirstOrDefault(x => x.Id == entry.ProjectEntry.ProjectId)?.Name
-                let configuration = parserProcessor.ProjectDefinitions.FirstOrDefault(x => x.Id == entry.ProjectEntry.ProjectId)?.Configuration
-                let errorCategory = entry.Error
-                let error = entry.ProjectEntry.Data
-                select Tuple.Create(lineNumber, project, configuration, errorCategory, error)).ToList();
-        }
         
         public IEnumerable<Tuple<uint, string>> GetProjectData(uint projectId)
         {
-            if (parserProcessor == null)
+            if (buildLogParser == null)
             {
                 return new List<Tuple<uint, string>>();
             }
+            
+            var codeBuildResults = buildLogParser.CodeResults;
 
-            return parserProcessor.ProjectEntries.Where(x => x.ProjectId == projectId)
+            return codeBuildResults.GetProjectEntries().Where(x => x.ProjectId == projectId)
                 .OrderBy(x => x.LineNumber)
                 .Select(x => Tuple.Create(x.LineNumber, x.Data));
         }
 
         public string GetSortedProjectData()
         {
+            if (buildLogParser == null)
+            {
+                return string.Empty;
+            }
+
             var builder = new StringBuilder(6000000);
-            foreach (var projectDefinition in parserProcessor.ProjectDefinitions.OrderBy(x => x.Id))
+            var codeBuildResults = buildLogParser.CodeResults;
+
+            foreach (var projectDefinition in codeBuildResults.GetProjectDefinitions().OrderBy(x => x.Id))
             {
                 builder.AppendLine("========================================================================");
                 builder.AppendLine($" {projectDefinition.Name}, {projectDefinition.Configuration}");
@@ -148,6 +133,17 @@ namespace TeamCityLogParserWeb.Services
             return builder.ToString();
         }
 
-        private string GetData(uint lineNumber) => dataService?.Data(lineNumber);
+
+        public IEnumerable<Tuple<uint, string>> GetDefaultStageErrors()
+        {
+            if (buildLogParser == null || !(IsSvnStageFailure() || IsVerifyPackagesStageFailure()))
+            {
+                return Enumerable.Empty<Tuple<uint, string>>();
+            }
+            var defaultParserResults =
+                IsSvnStageFailure() ? buildLogParser.SvnUpdateResults : buildLogParser.VerifyPackageResults;
+            
+            return defaultParserResults != null ? defaultParserResults.GetErrors() : Enumerable.Empty<Tuple<uint, string>>();
+        }
     }
 }

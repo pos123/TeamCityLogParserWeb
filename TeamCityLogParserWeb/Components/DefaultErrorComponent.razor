@@ -1,0 +1,26 @@
+﻿@inherits DefaultErrorComponentBase
+
+<div class="errors-container">
+    <div class="project-header">
+        <span></span>
+        <span class="platform-configuration">@ErrorDescription&nbsp;</span>
+    </div>
+    <div class="errors-list">
+        <ul class="list-group list-group-flush">
+            @code
+            {
+                int i = 0;
+            }
+
+            @foreach (var error in ParserService.GetDefaultStageErrors())
+            {
+                <li class="list-group-item">
+                    <div style="vertical-align: middle;">
+                        <span class="link-line-number"><span class="badge badge-info project-error-badge-size">@(++i)</span></span>
+                        <span>@error.Item2</span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

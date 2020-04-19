@@ -21,7 +21,7 @@ namespace TeamCityLogParserWeb.Components
 
         protected override void OnInitialized()
         {
-            FailedData = Parser?.GetBuildErrorsOutputForProject(FailedProjectId);
+            FailedData = Parser?.GetCodeBuildErrorsOutputForProject(FailedProjectId).ToList();
             ProjectName = FailedData?.FirstOrDefault()?.Item2;
             Configuration = FailedData?.FirstOrDefault()?.Item3;
         }

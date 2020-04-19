@@ -15,15 +15,12 @@ namespace TeamCityLogParserWeb.Components
 
         public string BuildTime;
 
-        public bool BuildCompleted { get; set; } = false;
-
         public bool BuildSucceeded { get; set; } = false;
 
         protected override void OnInitialized()
         {
-            (BuildSucceeded, SummaryMessage) = Parser.GetFinalBuildStatement();
+            (BuildSucceeded, SummaryMessage) = Parser.GetBuildStatement();
             BuildTime = Parser.GetBuildTimeTaken().HasValue ? $"{Parser.GetBuildTimeTaken()?.Hours}hrs {Parser.GetBuildTimeTaken()?.Minutes}min {Parser.GetBuildTimeTaken()?.Seconds}sec" : String.Empty;
-            BuildCompleted = Parser.IsSolutionBuildCompleted();
         }
     }
 }

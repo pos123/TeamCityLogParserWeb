@@ -8,6 +8,7 @@
         <ul class="nav nav-tabs" id="reportTab" role="tablist">
             <li class="nav-item"><a class="nav-link @(@SummaryActive) " id="summary-tab" data-toggle="tab" href="#summary" role="tab" aria-controls="summary" aria-selected="true"  @onclick="(() => SelectedTab(0))">
                 Summary</a></li>
+            
             <li class="nav-item ">
                 <a class="nav-link  @(@BuildErrorsActive) " id="errors-tab" data-toggle="tab" href="#errors" role="tab" aria-controls="errors" aria-selected="false" @onclick="(() => SelectedTab(1))">
                     Build Errors
@@ -17,6 +18,7 @@
                     }
                 </a>
             </li>
+            
             <li class="nav-item @(@DownloadsActive) "><a class="nav-link" id="downloads-tab" data-toggle="tab" href="#downloads" role="tab" aria-controls="downloads" aria-selected="false" @onclick="(() => SelectedTab(2))" >Downloads</a></li>
         </ul>
 
@@ -24,9 +26,11 @@
             <div class="tab-pane fade show  @(@SummaryActive) " id="summary" role="tabpanel" aria-labelledby="summary-tab">
                 <OutputSummaryComponent></OutputSummaryComponent>
             </div>
+            
             <div class="tab-pane fade show  @(@BuildErrorsActive)  " id="errors" role="tabpanel" aria-labelledby="errors-tab">
                 <OutputErrorsComponent></OutputErrorsComponent>
             </div>
+            
             <div class="tab-pane fade show  @(@DownloadsActive) " id="downloads" role="tabpanel" aria-labelledby="downloads-tab">
                 <DownloadComponent></DownloadComponent>
             </div>

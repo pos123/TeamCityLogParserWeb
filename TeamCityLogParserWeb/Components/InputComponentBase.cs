@@ -65,7 +65,7 @@ namespace TeamCityLogParserWeb.Components
                 if (processingStateProcess == ProcessingStatus.ParsingFinished)
                 {
                     ApplicationState.ShowReport = true;
-                    ApplicationState.BadgeErrorCount = ParserService.GetBuildErrorsOutput().Count;
+                    ApplicationState.BadgeErrorCount = ParserService.GetErrorCount();
                     ApplicationState.SelectedTab = 0;
                 }
             }
