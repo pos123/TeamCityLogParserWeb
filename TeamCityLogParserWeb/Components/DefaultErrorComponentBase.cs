@@ -16,8 +16,8 @@ namespace TeamCityLogParserWeb.Components
         protected override void OnInitialized()
         {
             ErrorDescription = ParserService.IsSvnStageFailure()
-                ? "SVN get errors"
-                : "Nuget Package Verification errors";
+                ? "SVN"
+                : "Nuget Package Verification";
         }
     }
 }

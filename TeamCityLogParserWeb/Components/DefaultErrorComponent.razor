@@ -3,7 +3,8 @@
 <div class="errors-container">
     <div class="project-header">
         <span></span>
-        <span class="platform-configuration">@ErrorDescription&nbsp;</span>
+        <span>@ErrorDescription&nbsp;</span>
+        <span class="platform-configuration">errors</span>
     </div>
     <div class="errors-list">
         <ul class="list-group list-group-flush">
@@ -18,6 +19,7 @@
                     <div style="vertical-align: middle;">
                         <span class="link-line-number"><span class="badge badge-info project-error-badge-size">@(++i)</span></span>
                         <span>@error.Item2</span>
+                        <span class="text-info">[log line number @error.Item1 ]</span>
                     </div>
                 </li>
             }
