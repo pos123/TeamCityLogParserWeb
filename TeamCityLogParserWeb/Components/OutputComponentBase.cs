@@ -27,6 +27,18 @@ namespace TeamCityLogParserWeb.Components
             DownloadsActive = AppState.SelectedTab == 2 ? "active" : Empty;
         }
 
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if (firstRender)
+            {
+                AppState.ProcessingState = ProcessingStatus.Done;
+                AppState.InputStateDisplay = "successfully parsed log file see build report below";
+            }
+
+            base.OnAfterRender(firstRender);
+        }
+
+
         public void Dispose()
         {
             AppState.OnChange -= StateHasChanged;

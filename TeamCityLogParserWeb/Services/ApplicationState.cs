@@ -11,12 +11,23 @@ namespace TeamCityLogParserWeb.Services
     {
         private ProcessingStatus internalProcessingState = ProcessingStatus.None;
         private bool showReport = false;
+        private bool showLogPage = false;
         private int badgeErrorCount;
         private int selectedTab = 0;
+        private string inputDisplay = string.Empty;
 
         public event Action OnChange;
         public string Filename { get; set; }
-        public string InputFileStateDisplay { get; set; } = Empty;
+        
+        public string InputStateDisplay
+        {
+            get => inputDisplay;
+            set
+            {
+                inputDisplay = value;
+                NotifyStateChanged();
+            }
+        }
 
         public ProcessingStatus ProcessingState
         {
@@ -39,6 +50,17 @@ namespace TeamCityLogParserWeb.Services
             }
         }
 
+        public bool ShowLogPage
+        {
+            get => showLogPage;
+            set
+            {
+                showLogPage = value;
+                NotifyStateChanged();
+            }
+        }
+
+       
         public int BadgeErrorCount
         {
             get => badgeErrorCount;
@@ -58,6 +80,10 @@ namespace TeamCityLogParserWeb.Services
                 NotifyStateChanged();
             }
         }
+
+        public int ErrorsProjectId { get; set; }
+        public int ErrorsLineNumber { get; set; }
+
 
         private void NotifyStateChanged() => OnChange?.Invoke();
     }

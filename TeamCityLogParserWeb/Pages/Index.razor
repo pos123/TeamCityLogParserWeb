@@ -1,9 +1,19 @@
 ﻿@page "/"
 @inherits IndexBase
 
-<InputComponent></InputComponent>
+<div style="@(!ApplicationState.ShowLogPage ? "display:block" : "display:none")">
+    <InputComponent></InputComponent>
 
-@if (ApplicationState.ShowReport)
+    @if (ApplicationState.ShowReport)
+    {
+        <OutputComponent></OutputComponent>
+    }
+</div>
+
+@if (ApplicationState.ShowLogPage)
 {
-    <OutputComponent></OutputComponent>
+    <ProjectLogComponent></ProjectLogComponent>
 }
+
+
+

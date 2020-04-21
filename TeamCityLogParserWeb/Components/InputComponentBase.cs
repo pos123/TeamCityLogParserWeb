@@ -21,10 +21,12 @@ namespace TeamCityLogParserWeb.Components
         FileUploadError,
         Parsing,
         ParsingFailure,
-        ParsingFinished
+        ParsingFinished,
+        CompilingReport,
+        Done,
     }
 
-    public class InputComponentBase : ComponentBase
+    public class InputComponentBase : ComponentBase, IDisposable
     {
         [Inject] private IParserService ParserService { get; set;}
 
@@ -38,8 +40,23 @@ namespace TeamCityLogParserWeb.Components
             ".log"
         };
 
-        
-        public bool IsProcessing => ApplicationState.ProcessingState == ProcessingStatus.FileUploading || ApplicationState.ProcessingState == ProcessingStatus.Parsing;
+
+        public bool IsProcessing => ApplicationState.ProcessingState == ProcessingStatus.FileUploading ||
+                                    ApplicationState.ProcessingState == ProcessingStatus.FileUploaded ||
+                                    ApplicationState.ProcessingState == ProcessingStatus.Parsing ||
+                                    ApplicationState.ProcessingState == ProcessingStatus.CompilingReport;
+
+
+        protected override void OnInitialized()
+        {
+            ApplicationState.OnChange += StateHasChanged;
+        }
+
+        public void Dispose()
+        {
+            ApplicationState.OnChange -= StateHasChanged;
+        }
+
 
         public async Task UploadFile(IFileListEntry[] files)
         {
@@ -48,7 +65,7 @@ namespace TeamCityLogParserWeb.Components
 
             ApplicationState.ProcessingState = state;
             ApplicationState.Filename = filename;
-            ApplicationState.InputFileStateDisplay = stateDisplay;
+            ApplicationState.InputStateDisplay = stateDisplay;
             ApplicationState.ShowReport = false;
             ApplicationState.BadgeErrorCount = 0;
             ApplicationState.SelectedTab = 0;
@@ -59,14 +76,17 @@ namespace TeamCityLogParserWeb.Components
                 var (processingStateProcess, processedPayload) = await ProcessFile(file, (processState, processDisplay) =>
                 {
                     ApplicationState.ProcessingState = processState;
-                    ApplicationState.InputFileStateDisplay = processDisplay;
+                    ApplicationState.InputStateDisplay = processDisplay;
                 });
 
                 if (processingStateProcess == ProcessingStatus.ParsingFinished)
                 {
-                    ApplicationState.ShowReport = true;
+                    ApplicationState.ProcessingState = ProcessingStatus.CompilingReport;
+                    ApplicationState.InputStateDisplay = "Compiling report ...";
+
                     ApplicationState.BadgeErrorCount = ParserService.GetErrorCount();
                     ApplicationState.SelectedTab = 0;
+                    ApplicationState.ShowReport = true;
                 }
             }
         }
@@ -114,8 +134,6 @@ namespace TeamCityLogParserWeb.Components
                         StateHasChanged();
                     });
                 });
-
-                updateAction(ProcessingStatus.ParsingFinished, "successfully parsed log file see build report below");
             }
             catch (Exception e)
             {

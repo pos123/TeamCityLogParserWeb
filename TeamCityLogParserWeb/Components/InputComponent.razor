@@ -25,38 +25,39 @@
             case ProcessingStatus.FileUploading:
                 <div class="input-status animated fadeIn slower">
                     <span class="input-status-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
-                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                    <span class="input-status-display">@ApplicationState.InputStateDisplay</span>
                 </div>
                 break;
             case ProcessingStatus.FileUploaded:
                 <div class="input-status animated fadeIn slower">
                     <span class="input-status-success"><i class="far fa-check-circle"></i></span>
-                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                    <span class="input-status-display">@ApplicationState.InputStateDisplay</span>
                 </div>
                 break;
             case ProcessingStatus.FileUploadError:
                 <div class="input-status animated fadeIn slower">
                     <span class="input-status-failure animated fadeIn slower"><i class="fas fa-exclamation-circle"></i></span>
-                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                    <span class="input-status-display">@ApplicationState.InputStateDisplay</span>
                 </div>
-                break;
-            case ProcessingStatus.Parsing:
+                    break;
+                case ProcessingStatus.Parsing:
+                case ProcessingStatus.CompilingReport:
                 <div class="input-status animated fadeIn slower">
                     <span class="input-status-spinner"><i class="fas fa-circle-notch fa-spin"></i></span>
-                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                    <span class="input-status-display">@ApplicationState.InputStateDisplay</span>
                 </div>
                 break;
-            case ProcessingStatus.ParsingFinished:
+            case ProcessingStatus.Done:
                 <div class="input-status animated fadeIn slower">
                     <span class="input-status-success"><i class="far fa-check-circle"></i></span>
-                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay&nbsp;</span>
+                    <span class="input-status-display">@ApplicationState.InputStateDisplay&nbsp;</span>
                     <span class="input-currently-selected-file-label animated fadeIn"><i class="fas fa-arrow-circle-down"></i></span>
                 </div>
                 break;
             case ProcessingStatus.ParsingFailure:
                 <div class="input-status animated fadeIn slower">
                     <span class="input-status-failure animated fadeIn slower"><i class="fas fa-exclamation-circle"></i></span>
-                    <span class="input-status-display">@ApplicationState.InputFileStateDisplay</span>
+                    <span class="input-status-display">@ApplicationState.InputStateDisplay</span>
                 </div>
                 break;
             default:

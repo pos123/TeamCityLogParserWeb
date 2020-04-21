@@ -1,5 +1,4 @@
-﻿@page "/project/{ProjectId:int}/{LineNumber:int}"
-@using TeamCityLogParserWeb.Services
+﻿@using TeamCityLogParserWeb.Services
 @inherits ProjectLogComponentBase
 
 
@@ -12,7 +11,7 @@
         <span class="badge badge-danger project-errors-badge-size">@ErrorCount</span>
 
         <div class="project-log-detail">
-            @foreach (var entry in Parser.GetProjectData((uint)@ProjectId))
+            @foreach (var entry in Parser.GetProjectData((uint)ApplicationState.ErrorsProjectId))
             {
                 var (isError, previous, next, errorNumber) = ErrorMap.IsErrorLine(entry.Item1);
                 if (isError)

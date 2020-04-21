@@ -11,10 +11,13 @@ namespace TeamCityLogParserWeb.Services
     {
         event Action OnChange;
         string Filename { get; set; }
-        string InputFileStateDisplay { get; set; }
+        string InputStateDisplay { get; set; }
         ProcessingStatus ProcessingState { get; set; }
         bool ShowReport { get; set; }
+        bool ShowLogPage { get; set; }
         int BadgeErrorCount { get; set; }
         int SelectedTab { get; set; }
+        int ErrorsProjectId { get; set; }
+        int ErrorsLineNumber { get; set; }
     }
 }
