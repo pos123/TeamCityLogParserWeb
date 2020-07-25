@@ -57,7 +57,6 @@ namespace TeamCityLogParserWeb.Components
             ApplicationState.OnChange -= StateHasChanged;
         }
 
-
         public async Task UploadFile(IFileListEntry[] files)
         {
             var file = files.FirstOrDefault();
